@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lion.AimingCam.WebActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarMain"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <LinearLayout
+        android:id="@+id/layoutAimButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonAim10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMoveAim"
+            android:text="10m" />
+
+        <Button
+            android:id="@+id/buttonAim20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMoveAim"
+            android:text="20m" />
+
+        <Button
+            android:id="@+id/buttonAim30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMoveAim"
+            android:text="30m" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutWebView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp">
+
+        <com.lion.AimingCam.MyWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+        </com.lion.AimingCam.MyWebView>
+
+        <ImageView
+            android:id="@+id/imageViewAim"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_alignBottom="@+id/webView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="200dp"
+            app:srcCompat="@drawable/aim" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutCalibrateButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonAimUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onCalibrationButtonClick"
+            android:text="Up" />
+
+        <Button
+            android:id="@+id/buttonAimDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onCalibrationButtonClick"
+            android:text="Down" />
+
+        <Button
+            android:id="@+id/buttonAimSet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onCalibrationButtonClick"
+            android:text="Set" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center"
+        android:text="@string/app_name" />
+
+</LinearLayout>

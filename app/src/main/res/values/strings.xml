@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LaserAimingCam</string>
+    <string name="menu_login">Login</string>
+    <string name="menu_aim">To Aim</string>
+    <string name="menu_test">ฅ(Logcat)ฅ</string>
+    <string name="menu_calibrate">Calibrate</string>
+</resources>

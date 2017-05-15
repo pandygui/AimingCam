@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name ="distance">
+        <item >10m</item>
+        <item >20m</item>
+        <item >30m</item>
+        <item ></item>
+    </string-array>
+
+</resources>
