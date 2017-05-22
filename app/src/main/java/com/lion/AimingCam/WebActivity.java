@@ -16,18 +16,25 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class WebActivity extends AppCompatActivity {
+public class WebActivity extends AppCompatActivity implements MyWebView.OnWebViewInteractionListener {
+
+    private int lastestX = 0, lastestY = 0;
+    @Override
+    public void onScrollChanged(int x, int y) {
+        lastestX = x;
+        lastestY = y;
+    }
 
     private void disableScroll() {
-        webView.setHorizontalScrollBarEnabled(false);
-        webView.setVerticalScrollBarEnabled(false);
-        webView.setScrollbarFadingEnabled(true);
-        webView.setOnTouchListener(new View.OnTouchListener() {
+        webView.setHorizontalScrollBarEnabled(true);
+        webView.setVerticalScrollBarEnabled(true);
+        webView.setScrollbarFadingEnabled(false);
+        /*webView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return (event.getAction() == MotionEvent.ACTION_MOVE);
             }
-        });
+        });*/
         webView.getSettings().setSupportZoom(false);
         webView.getSettings().setBuiltInZoomControls(false);
     }
@@ -101,6 +108,12 @@ public class WebActivity extends AppCompatActivity {
             default:
                 break;
         }
+
+        lastestX = preferences.getInt(currentDistance + "X", 0);
+        lastestY = preferences.getInt(currentDistance + "Y", 0);
+        webView.enableScroll(true);
+        webView.scrollTo(lastestX, lastestY);
+        webView.enableScroll(false);
     }
 
     private String currentDistance = DISTANCE_10;
@@ -128,6 +141,7 @@ public class WebActivity extends AppCompatActivity {
                         aimButtons.setVisibility(View.INVISIBLE);
                         toolbar.getMenu().setGroupEnabled(R.id.group_1, false);
                         toolbar.getMenu().setGroupEnabled(R.id.group_2, false);
+                        webView.enableScroll(true);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -153,11 +167,14 @@ public class WebActivity extends AppCompatActivity {
             case R.id.buttonAimSet:
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt(currentDistance, params.bottomMargin);
+                editor.putInt(currentDistance + "X", lastestX);
+                editor.putInt(currentDistance + "Y", lastestY);
                 editor.apply();
                 calibrationButtons.setVisibility(View.GONE);
                 aimButtons.setVisibility(View.VISIBLE);
                 toolbar.getMenu().setGroupEnabled(R.id.group_1, true);
                 toolbar.getMenu().setGroupEnabled(R.id.group_2, true);
+                webView.enableScroll(false);
                 break;
             default:
                 break;
@@ -176,7 +193,7 @@ public class WebActivity extends AppCompatActivity {
 
         bindLayout();
         initializeWebView();
-        disableScroll();
+        //disableScroll();
         initializeWelcomeView();
 
         preferences = getSharedPreferences(PREFS_NAME, 0);
@@ -188,7 +205,6 @@ public class WebActivity extends AppCompatActivity {
     private static final String DISTANCE_10 = "distance10";
     private static final String DISTANCE_20 = "distance20";
     private static final String DISTANCE_30 = "distance30";
-
 
     private void logcat() {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)imageViewAim.getLayoutParams();
@@ -219,6 +235,7 @@ public class WebActivity extends AppCompatActivity {
 
     private static final String loginUrl = "http://192.168.8.1/html/mobile/index";
     private static final String streamUrl = "http://192.168.8.1/stream";
+    //private static final String streamUrl = "http://lionhere.cn/gumi-red-hat/";
     MyWebView webView;
     ImageView imageViewAim;
 

@@ -1,7 +1,9 @@
 package com.lion.AimingCam;
 
 import android.content.Context;
+import android.support.annotation.Px;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.webkit.WebView;
 
 /**
@@ -9,20 +11,36 @@ import android.webkit.WebView;
  */
 
 public class MyWebView extends WebView {
+
+    private OnWebViewInteractionListener listener;
+
+    private void bindListener(Context context) {
+        if (context instanceof OnWebViewInteractionListener) {
+            listener = (OnWebViewInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnWebViewInteractionListener");
+        }
+    }
+
     public MyWebView(Context context) {
         super(context);
+        bindListener(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        bindListener(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        bindListener(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        bindListener(context);
     }
 
     int getStreamWidth() {
@@ -38,7 +56,6 @@ public class MyWebView extends WebView {
     public void aimModeEnable(boolean aimModeEnabled) {
         this.aimModeEnabled = aimModeEnabled;
         //TODO: 无法自动初始化焦距
-        //if(aimModeEnabled) onScrollChanged(0, 0, 0, 0);
     }
 
     public void zoomTo(int times) {
@@ -50,14 +67,39 @@ public class MyWebView extends WebView {
     }
 
     @Override
-    protected void onScrollChanged(int x, int y, int xx, int yy) {
-        //super.onScrollChanged(x,y,xx,yy);
+    protected void onScrollChanged(int x, int y, int oldX, int oldY) {
+        super.onScrollChanged(x,y,oldX,oldY);
+        if (scrollMode) listener.onScrollChanged(x, y);
+        //Deprecated
+        /*
         if (aimModeEnabled) {
             int deltaX = getStreamWidth() / 2 - getWidth() / 2;
             int deltaY = getStreamHeight() / 2 - getHeight() / 2;
             scrollTo(deltaX, deltaY);
         }
         else
-            super.onScrollChanged(x,y,xx,yy);
+            super.onScrollChanged(x,y,oldX,oldY);*/
     }
+
+    @Override
+    public void scrollTo(@Px int x, @Px int y) {
+        super.scrollTo(x, y);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return !scrollMode || super.onTouchEvent(event);
+    }
+
+    private boolean scrollMode = false;
+
+    public void enableScroll(boolean enabled) {
+        scrollMode = enabled;
+    }
+
+    interface OnWebViewInteractionListener {
+        void onScrollChanged(int x, int y);
+    }
+
+
 }
