@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">激光瞄准镜</string>
-    <string name="menu_login">Login</string>
-    <string name="menu_aim">To Aim</string>
+    <string name="menu_login">登陆</string>
+    <string name="menu_aim">瞄准画面</string>
     <string name="menu_test">ฅ(Logcat)ฅ</string>
-    <string name="menu_calibrate">Calibrate</string>
+    <string name="menu_calibrate">校准</string>
+    <string name="button_10m">10米</string>
+    <string name="button_20m">20米</string>
+    <string name="button_30m">30米</string>
+    <string name="button_up">上移</string>
+    <string name="button_down">下移</string>
+    <string name="button_set">确定</string>
 </resources>

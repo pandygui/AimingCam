@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/basic_background"
     android:orientation="vertical"
     tools:context="com.lion.AimingCam.WebActivity">
 
@@ -28,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onMoveAim"
-            android:text="10m" />
+            android:text="@string/button_10m" />
 
         <Button
             android:id="@+id/buttonAim20"
@@ -36,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onMoveAim"
-            android:text="20m" />
+            android:text="@string/button_20m" />
 
         <Button
             android:id="@+id/buttonAim30"
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onMoveAim"
-            android:text="30m" />
+            android:text="@string/button_30m" />
     </LinearLayout>
 
     <RelativeLayout
@@ -84,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onCalibrationButtonClick"
-            android:text="Up" />
+            android:text="@string/button_up" />
 
         <Button
             android:id="@+id/buttonAimDown"
@@ -92,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onCalibrationButtonClick"
-            android:text="Down" />
+            android:text="@string/button_down" />
 
         <Button
             android:id="@+id/buttonAimSet"
@@ -100,16 +101,32 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onCalibrationButtonClick"
-            android:text="Set" />
+            android:text="@string/button_set" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewWelcome"
+    <LinearLayout
+        android:id="@+id/layoutWelcome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical|center"
-        android:text="@string/app_name" />
+        android:gravity="center_vertical|center_horizontal|center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageViewTsinghuaLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:srcCompat="@drawable/tsinghua_logo" />
+
+        <TextView
+            android:id="@+id/textViewWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center"
+            android:text="@string/app_name"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>

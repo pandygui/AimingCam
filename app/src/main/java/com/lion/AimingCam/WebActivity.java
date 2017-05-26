@@ -2,6 +2,7 @@ package com.lion.AimingCam;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,17 +52,17 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
         calibrationButtons = findViewById(R.id.layoutCalibrateButtons);
         imageViewAim = (ImageView) findViewById(R.id.imageViewAim);
         layoutWebView = findViewById(R.id.layoutWebView);
-        textViewWelcome = (TextView)findViewById(R.id.textViewWelcome);
+        layoutWelcome = (LinearLayout) findViewById(R.id.layoutWelcome);
     }
 
-    TextView textViewWelcome;
+    LinearLayout layoutWelcome;
 
     private void initializeWelcomeView() {
         imageViewAim.setVisibility(View.INVISIBLE);
         layoutWebView.setVisibility(View.GONE);
         aimButtons.setVisibility(View.GONE);
         calibrationButtons.setVisibility(View.GONE);
-        textViewWelcome.setVisibility(View.VISIBLE);
+        layoutWelcome.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -120,7 +122,7 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
 
     private void calibrate() {
         AlertDialog.Builder builder = new AlertDialog.Builder(WebActivity.this);
-        builder.setTitle("select calibration distance")
+        builder.setTitle("选择校准距离")
                 .setItems(R.array.distance, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -144,7 +146,7 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
                         webView.enableScroll(true);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -190,6 +192,7 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
 
         toolbar = (Toolbar)findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.icon_launch_mini);
 
         bindLayout();
         initializeWebView();
@@ -247,7 +250,9 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
         aimButtons.setVisibility(View.INVISIBLE);
         imageViewAim.setVisibility(View.INVISIBLE);
         layoutWebView.setVisibility(View.VISIBLE);
-        textViewWelcome.setVisibility(View.GONE);
+        layoutWelcome.setVisibility(View.GONE);
+
+        toolbar.getMenu().setGroupEnabled(R.id.group_2, false);
     }
 
     public void toAim() {
@@ -258,7 +263,7 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
         aimButtons.setVisibility(View.VISIBLE);
         imageViewAim.setVisibility(View.VISIBLE);
         layoutWebView.setVisibility(View.VISIBLE);
-        textViewWelcome.setVisibility(View.GONE);
+        layoutWelcome.setVisibility(View.GONE);
         toolbar.getMenu().setGroupEnabled(R.id.group_2, true);
     }
 
