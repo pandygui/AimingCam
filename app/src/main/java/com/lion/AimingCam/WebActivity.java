@@ -1,8 +1,18 @@
 package com.lion.AimingCam;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBar;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,13 +20,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class WebActivity extends AppCompatActivity implements MyWebView.OnWebViewInteractionListener {
 
@@ -200,7 +214,39 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
         initializeWelcomeView();
 
         preferences = getSharedPreferences(PREFS_NAME, 0);
+    }
 
+    private void checkPrivilege() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET}, 0);
+        if (!privilegeGranted()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("需要系统权限")
+                    .setMessage("此应用需要以下权限以正常运行:\n·网络权限\n·外部储存写入权限")
+                    .setPositiveButton("设置页面", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    })
+                    .setCancelable(false);
+            builder.create().show();
+        }
+    }
+
+    private boolean privilegeGranted() {
+        return (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
+                == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED);
     }
 
     private static final String PREFS_NAME = "LaserAimingCamPrefsFile";
@@ -238,33 +284,73 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
 
     private static final String loginUrl = "http://192.168.8.1/html/mobile/index";
     private static final String streamUrl = "http://192.168.8.1/stream";
-    //private static final String streamUrl = "http://lionhere.cn/gumi-red-hat/";
+
     MyWebView webView;
     ImageView imageViewAim;
 
     public void login() {
-        webView.loadUrl(loginUrl);
+        if (privilegeGranted()) {
+            webView.loadUrl(loginUrl);
+            webView.enableScroll(true);
 
-        webView.aimModeEnable(false);
+            aimButtons.setVisibility(View.INVISIBLE);
+            imageViewAim.setVisibility(View.INVISIBLE);
+            layoutWebView.setVisibility(View.VISIBLE);
+            layoutWelcome.setVisibility(View.GONE);
 
-        aimButtons.setVisibility(View.INVISIBLE);
-        imageViewAim.setVisibility(View.INVISIBLE);
-        layoutWebView.setVisibility(View.VISIBLE);
-        layoutWelcome.setVisibility(View.GONE);
-
-        toolbar.getMenu().setGroupEnabled(R.id.group_2, false);
+            toolbar.getMenu().setGroupEnabled(R.id.group_2, false);
+        } else {
+            checkPrivilege();
+        }
     }
 
     public void toAim() {
-        webView.loadUrl(streamUrl);
+        if (privilegeGranted()) {
+            webView.loadUrl(streamUrl);
+            webView.enableScroll(false);
 
-        webView.aimModeEnable(true);
+            aimButtons.setVisibility(View.VISIBLE);
+            imageViewAim.setVisibility(View.VISIBLE);
+            layoutWebView.setVisibility(View.VISIBLE);
+            layoutWelcome.setVisibility(View.GONE);
+            toolbar.getMenu().setGroupEnabled(R.id.group_2, true);
 
-        aimButtons.setVisibility(View.VISIBLE);
-        imageViewAim.setVisibility(View.VISIBLE);
-        layoutWebView.setVisibility(View.VISIBLE);
-        layoutWelcome.setVisibility(View.GONE);
-        toolbar.getMenu().setGroupEnabled(R.id.group_2, true);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    takeScreenshot();
+                }
+            }, 2000);
+        } else {
+            checkPrivilege();
+        }
+    }
+
+    private void takeScreenshot() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd_kk:mm:ss");
+        sdf.setTimeZone(TimeZone.getDefault());
+        String time = sdf.format(new Date());
+        try {
+            File dir = new File(Environment.getExternalStorageDirectory().toString()
+                    + "/" + getString(R.string.app_name_eng));
+            if (!dir.exists()) dir.mkdir();
+            String mPath = dir.getPath() + "/" + time + ".jpg";
+
+            View v1 = getWindow().getDecorView().getRootView();
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(mPath);
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
 }

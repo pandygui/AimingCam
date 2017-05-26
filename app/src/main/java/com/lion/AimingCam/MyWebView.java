@@ -51,13 +51,6 @@ public class MyWebView extends WebView {
         return (int)(super.computeHorizontalScrollRange() * 0.75);
     }
 
-    private boolean aimModeEnabled = false;
-
-    public void aimModeEnable(boolean aimModeEnabled) {
-        this.aimModeEnabled = aimModeEnabled;
-        //TODO: 无法自动初始化焦距
-    }
-
     public void zoomTo(int times) {
         zoomBy((float).02);
         float streamHeight = getStreamHeight();
