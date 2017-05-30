@@ -11,4 +11,5 @@
     <string name="button_up">上移</string>
     <string name="button_down">下移</string>
     <string name="button_set">确定</string>
+    <string name="welcome_words">欢迎使用</string>
 </resources>

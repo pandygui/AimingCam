@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -100,9 +99,45 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
                 return true;
             case R.id.action_calibrate:
                 calibrate();
+                return true;
+            case R.id.action_screenshot:
+                showScreenshot();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showScreenshot() {
+        Intent intent = new Intent(this, LogActivity.class);
+        startActivity(intent);
+        /*
+        try {
+            String bucketId = "";
+
+            final String[] projection = new String[] {"DISTINCT " + MediaStore.Images.Media.BUCKET_DISPLAY_NAME + ", " + MediaStore.Images.Media.BUCKET_ID};
+            final Cursor cur = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+
+            while (cur != null && cur.moveToNext()) {
+                final String bucketName = cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME)));
+                if (bucketName.equals("AimingCam")) {
+                    bucketId = cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_ID)));
+                    break;
+                }
+            }
+            Uri mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            if (bucketId.length() > 0) {
+                mediaUri = mediaUri.buildUpon()
+                        .authority("media")
+                        .appendQueryParameter("bucketId", bucketId)
+                        .build();
+            }
+            Intent intent = new Intent(Intent.ACTION_VIEW, mediaUri);
+            intent.setType("image/*");
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.e("screenshot", e.getMessage());
+        }*/
     }
 
     private void setCurrentDistance(String currentDistance) {
@@ -203,10 +238,12 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPurpleDark));
 
         toolbar = (Toolbar)findViewById(R.id.toolbarMain);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.icon_launch_mini);
+        //toolbar.setNavigationIcon(R.drawable.icon_launch_mini);
 
         bindLayout();
         initializeWebView();
@@ -214,11 +251,17 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
         initializeWelcomeView();
 
         preferences = getSharedPreferences(PREFS_NAME, 0);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                login();
+            }
+        }, 100);
     }
 
-    private void checkPrivilege() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.INTERNET}, 0);
+    private void showPrivilege() {
         if (!privilegeGranted()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("需要系统权限")
@@ -300,7 +343,7 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
 
             toolbar.getMenu().setGroupEnabled(R.id.group_2, false);
         } else {
-            checkPrivilege();
+            showPrivilege();
         }
     }
 
@@ -323,7 +366,7 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
                 }
             }, 2000);
         } else {
-            checkPrivilege();
+            showPrivilege();
         }
     }
 

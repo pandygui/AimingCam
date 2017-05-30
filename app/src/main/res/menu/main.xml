@@ -35,4 +35,9 @@
 
     </group>
 
+    <item
+        android:id="@+id/action_screenshot"
+        android:title="使用记录"
+        app:showAsAction="never" />
+
 </menu>
