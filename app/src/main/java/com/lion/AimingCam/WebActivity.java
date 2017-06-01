@@ -65,17 +65,13 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
         calibrationButtons = findViewById(R.id.layoutCalibrateButtons);
         imageViewAim = (ImageView) findViewById(R.id.imageViewAim);
         layoutWebView = findViewById(R.id.layoutWebView);
-        layoutWelcome = (LinearLayout) findViewById(R.id.layoutWelcome);
     }
 
-    LinearLayout layoutWelcome;
-
     private void initializeWelcomeView() {
-        imageViewAim.setVisibility(View.INVISIBLE);
+        imageViewAim.setVisibility(View.GONE);
         layoutWebView.setVisibility(View.GONE);
         aimButtons.setVisibility(View.GONE);
         calibrationButtons.setVisibility(View.GONE);
-        layoutWelcome.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -189,7 +185,7 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
                                 break;
                         }
                         calibrationButtons.setVisibility(View.VISIBLE);
-                        aimButtons.setVisibility(View.INVISIBLE);
+                        aimButtons.setVisibility(View.GONE);
                         toolbar.getMenu().setGroupEnabled(R.id.group_1, false);
                         toolbar.getMenu().setGroupEnabled(R.id.group_2, false);
                         webView.enableScroll(true);
@@ -336,10 +332,9 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
             webView.loadUrl(loginUrl);
             webView.enableScroll(true);
 
-            aimButtons.setVisibility(View.INVISIBLE);
-            imageViewAim.setVisibility(View.INVISIBLE);
+            aimButtons.setVisibility(View.GONE);
+            imageViewAim.setVisibility(View.GONE);
             layoutWebView.setVisibility(View.VISIBLE);
-            layoutWelcome.setVisibility(View.GONE);
 
             toolbar.getMenu().setGroupEnabled(R.id.group_2, false);
         } else {
@@ -355,7 +350,6 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
             aimButtons.setVisibility(View.VISIBLE);
             imageViewAim.setVisibility(View.VISIBLE);
             layoutWebView.setVisibility(View.VISIBLE);
-            layoutWelcome.setVisibility(View.GONE);
             toolbar.getMenu().setGroupEnabled(R.id.group_2, true);
 
             final Handler handler = new Handler();
@@ -380,10 +374,10 @@ public class WebActivity extends AppCompatActivity implements MyWebView.OnWebVie
             if (!dir.exists()) dir.mkdir();
             String mPath = dir.getPath() + "/" + time + ".jpg";
 
-            View v1 = getWindow().getDecorView().getRootView();
-            v1.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-            v1.setDrawingCacheEnabled(false);
+            View view = getWindow().getDecorView().getRootView();
+            view.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
 
             File imageFile = new File(mPath);
             FileOutputStream outputStream = new FileOutputStream(imageFile);

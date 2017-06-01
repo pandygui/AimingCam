@@ -32,18 +32,23 @@ public class LogActivity extends AppCompatActivity {
 
         File file  = new File(Environment.getExternalStorageDirectory().toString()
                 + "/" + getString(R.string.app_name_eng));
+        String[] names = file.list();
+        for (int i = 0; i < names.length; i++) {
+           names[i] = names[i].replace(".jpg","");
+        }
+
         ListView listView = (ListView) findViewById(R.id.listViewLog);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, file.list());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, names);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(onItemClickListener);
     }
 
-    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener onItemClickListener= new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String name = ((TextView)view).getText().toString();
             File file = new File(Environment.getExternalStorageDirectory().toString()
-                    + "/" + getString(R.string.app_name_eng) + '/' + name);
+                    + "/" + getString(R.string.app_name_eng) + '/' + name + ".jpg");
             Bitmap img = BitmapFactory.decodeFile(file.getPath());
             ImageView imageView = new ImageView(LogActivity.this);
             imageView.setImageBitmap(img);

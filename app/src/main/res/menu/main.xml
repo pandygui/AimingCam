@@ -16,6 +16,11 @@
             android:title="@string/menu_aim"
             app:showAsAction="never" />
 
+        <item
+            android:id="@+id/action_screenshot"
+            android:title="@string/menu_log"
+            app:showAsAction="never" />
+
     </group>
 
     <group
@@ -27,17 +32,12 @@
             android:title="@string/menu_calibrate"
             app:showAsAction="never" />
 
-        <item
-            android:id="@+id/action_test"
-            android:title="@string/menu_test"
-            android:visible="false"
-            app:showAsAction="never" />
-
     </group>
 
     <item
-        android:id="@+id/action_screenshot"
-        android:title="使用记录"
+        android:id="@+id/action_test"
+        android:title="@string/menu_test"
+        android:visible="false"
         app:showAsAction="never" />
 
 </menu>

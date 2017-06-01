@@ -6,4 +6,5 @@
     <color name="colorPurpleMain">#6F3381</color>
     <color name="colorPurpleDark">#5F2371</color>
     <color name="white">#ffffff</color>
+    <color name="background">#5E3D50</color>
 </resources>

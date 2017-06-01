@@ -51,12 +51,12 @@ public class MyWebView extends WebView {
         return (int)(super.computeHorizontalScrollRange() * 0.75);
     }
 
-    public void zoomTo(int times) {
+    public void zoomTo(int factor) {
         zoomBy((float).02);
         float streamHeight = getStreamHeight();
         float expectedHeight = getHeight();
         float defaultZoomFactor = expectedHeight / streamHeight;
-        zoomBy(defaultZoomFactor * times);
+        zoomBy(defaultZoomFactor * factor);
     }
 
     @Override
